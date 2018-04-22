@@ -19,6 +19,7 @@ function preload(){
 function setup(){
     createCanvas(windowWidth, windowHeight);
     video = createCapture(VIDEO);
+    video.size(320, 240);
     maya = createSprite (width/2 - width/4, height/2, 100, 100);
     pey = createSprite(width/2, height/2.2, 100, 100);
     bark.loop();
@@ -37,8 +38,6 @@ function setup(){
 }
  
 function draw (){
-  background(255,255,255);
-    
     video.loadPixels();
     var totalFoundPixels = 0; //we are going to find the average location of change pixels so
     var sumX = 0; //we will need the sum of all the x find, the sum of all the y find and the total finds
@@ -83,22 +82,21 @@ function draw (){
         
         aveX = map(aveX,0,width,width,0);
         aveY = sumY / totalFoundPixels;
-        
-        
+         
         ellipse(aveX - 10, (aveY - 10), 20, 20);
     }
 
     
-if(sumX < pey.position.x - 480) {
+if(aveX < pey.position.x - 480) {
     pey.changeAnimation("left");
         }
-        else if(sumX < pey.position.x - 160 && sumX > pey.position.x - 480) {
+        else if(aveX < pey.position.x - 160 && aveX > pey.position.x - 480) {
             pey.changeAnimation("mleft");
         }
-        else if(sumX > pey.position.x + 160 && sumX < pey.position.x + 480) {
+        else if(aveX > pey.position.x + 160 && aveX < pey.position.x + 480) {
             pey.changeAnimation("mright");
         }
-        else if(mouseX > pey.position.x + 480) {
+        else if(aveX > pey.position.x + 480) {
             pey.changeAnimation("right");
     }
         else {
@@ -107,13 +105,13 @@ if(sumX < pey.position.x - 480) {
  if(mouseX < maya.position.x - 480 ) {
     maya.changeAnimation("left");
   }
-  else if(mouseX < maya.position.x - 160 && mouseX > maya.position.x - 480) {
+  else if(aveX < maya.position.x - 160 && aveX > maya.position.x - 480) {
   maya.changeAnimation("mleft");
   }
-  else if(mouseX > maya.position.x + 160 && mouseX < maya.position.x + 480) {
+  else if(aveX > maya.position.x + 160 && aveX < maya.position.x + 480) {
     maya.changeAnimation("mright");
   }
-  else if(mouseX > maya.position.x + 480) {
+  else if(aveX > maya.position.x + 480) {
     maya.changeAnimation("right");
   }
    else {
@@ -125,7 +123,7 @@ if(sumX < pey.position.x - 480) {
 }
 
 function mousePressed(){
-     var offset = map(mouseX, 0,width,width,0);
+    var offset = map(mouseX, 0,width,width,0);
     //pull out the same pixel from the current frame 
     var thisColor = video.get(offset, mouseY);
 
