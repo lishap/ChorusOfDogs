@@ -1,13 +1,15 @@
 var pey, maya, jes, bark;
-
-var aveX, aveY; 
-
-var threshold = 20; 
-
+var aveX = 0;
+var aveY = 0; 
+var video;
+var constraints;
+var threshold = 50; 
 var objectR = 255;
 var objectG = 0;
 var objectB = 0;
 var debug = true;
+var calibration = true;
+    
 
 function preload(){
     maya = loadAnimation("dog_spr/maya1.png","dog_spr/maya2.png","dog_spr/maya3.png","dog_spr/maya4.png","dog_spr/maya5.png");  
@@ -15,29 +17,27 @@ function preload(){
     pey = loadAnimation("dog_spr/pey1.png","dog_spr/pey2.png","dog_spr/pey3.png","dog_spr/pey4.png","dog_spr/pey5.png");
     soundFormats('m4a');
     bark = loadSound('dog_spr/bark.m4a');
-    }
+}
 
 function setup(){
     createCanvas(windowWidth, windowHeight);
-    video = createCapture(constraints, function (stream){
-        console.log(stream);
-    });
     
-    var constraints = {
+     constraints = {
         video: {
             mandatory: {
-                minWidth: windowWidth,
-                minHeight: windowHeight
+                minWidth: width,
+                minHeight: height
             },
-            optional: [{maxFrameRate: 10}]
+            optional: [{
+                maxFrameRate: 10
+            }]
         },
-        audio: true
+        audio: false
     };
-    createCapture (constraints, function(stream){
-        console.log(stream);
-    });
     
-    var calibration = true;
+   video = createCapture(constraints, function(stream){
+       console.log("hello " + stream);
+});
     
     maya = createSprite (width/2 - width/4, height/2, 100, 100);
     pey = createSprite(width/2, height/2.2, 100, 100);
@@ -54,37 +54,33 @@ function setup(){
     maya.addAnimation("mleft","dog_spr/maya2.png");
     maya.addAnimation("mright","dog_spr/maya4.png");
     maya.addAnimation("right","dog_spr/maya5.png");  
+
+    console.log("setup works ");
 }
  
 function draw (){
     background(255);
-   // video.loadPixels();
+    video.loadPixels();
     var totalFoundPixels = 0; //we are going to find the average location of change pixels so
     var sumX = 0; //we will need the sum of all the x find, the sum of all the y find and the total finds
     var sumY = 0;
 
-    //enter into the classic nested for statements of computer vision
     for (var row = 0; row < video.height; row++) {
         for (var col = 0; col < video.width; col++) {
-            //the pixels file into the room long line you use this simple formula to find what row and column the sit in 
             
             var offset = (row * video.width + col) * 4;
-            //pull out the same pixel from the current frame 
             var thisColor = video.pixels[offset];
 
-            //pull out the individual colors for both pixels
             var r = video.pixels[offset];
             var g = video.pixels[offset + 1];
             var b = video.pixels[offset + 2];
-
-            //in a color "space" you find the distance between color the same whay you would in a cartesian space, phythag or dist in processing
             var redDist = abs(r-objectR);
             var greenDist = abs(g-objectG);
             var blueDist = abs(b-objectB);
             
             var diff = redDist + greenDist + blueDist;
 
-            if (diff < threshold) { //if it is close enough in size, add it to the average
+           if (diff < threshold) { //if it is close enough in size, add it to the average
                 sumX = sumX + col;
                 sumY = sumY + row;
                 totalFoundPixels++;
@@ -92,24 +88,6 @@ function draw (){
             }   
         }
     }
-    video.updatePixels();
-    
-    push();
-    translate(video.width,0);
-    scale(-1.0,1.0);
-    image(video, 0, 0);
-    pop();
-
-
-    if (totalFoundPixels > 0) {
-        aveX = sumX / totalFoundPixels;
-        
-        aveX = map(aveX,0,width,width,0);
-        aveY = sumY / totalFoundPixels;
-         
-        ellipse(aveX - 10, (aveY - 10), 20, 20);
-    }
-
     
 if(aveX < pey.position.x - 480) {
     pey.changeAnimation("left");
@@ -124,9 +102,10 @@ if(aveX < pey.position.x - 480) {
             pey.changeAnimation("right");
     }
         else {
-            pey.changeAnimation("forward");}
+            pey.changeAnimation("forward");
+        }
     
-if(mouseX < maya.position.x - 480 ) {
+if(aveX < maya.position.x - 480 ) {
     maya.changeAnimation("left");
   }
   else if(aveX < maya.position.x - 160 && aveX > maya.position.x - 480) {
@@ -141,21 +120,36 @@ if(mouseX < maya.position.x - 480 ) {
    else {
     maya.changeAnimation("forward");
   }
-
-if (calibration = true){
-     video.loadPixels()    
-    }
     
     animation(jes, width/2 + width/4, height/2, 100,100);
     drawSprites();
+    
+    video.updatePixels();
+    if (calibration == true){
+    push();
+    translate(video.width,0);
+    scale(-1.0,1.0);
+    image(video, 0, 0);
+    pop();
+}
 
+
+    if (totalFoundPixels > 0) {
+        aveX = sumX / totalFoundPixels;
+        
+        aveX = map(aveX,0,width,width,0);
+        aveY = sumY / totalFoundPixels;
+         
+        ellipse(aveX - 10, (aveY - 10), 20, 20);
+    }
+ //console.log(width +",  "+ height);
 }
 
 function mousePressed(){
     var offset = map(mouseX, 0,width,width,0);
     //pull out the same pixel from the current frame 
     var thisColor = video.get(offset, mouseY);
-    var boolean = false;
+    var calibration = false;
 
     //pull out the individual colors for both pixels
     objectR = thisColor[0];
