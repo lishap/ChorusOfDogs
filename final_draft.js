@@ -143,7 +143,7 @@ if(aveX < maya.position.x - 480 ) {
          
         ellipse(aveX - 10, (aveY - 10), 20, 20);
 }
-   if(totalFoundPixels > 1000){
+   if(totalFoundPixels > closeThreshold){
       if (bark.isPlaying()){
         bark.stop();  
         jes.stop();
@@ -152,8 +152,7 @@ if(aveX < maya.position.x - 480 ) {
         jes.play();
     }
       } 
-    
- //console.log(width +",  "+ height);
+    console.log("total found pixels ", totalFoundPixels);
 }
 
 
@@ -172,11 +171,11 @@ function mousePressed(){
 function keyTyped() {
     //for adjusting things on the fly
     if (key == '-') {
-        closeThreshold-=10000;
+        closeThreshold-=20000;
         console.log("Threshold " + closeThreshold);
     }
     if (key == '+') {
-        closeThreshold+=10000;
+        closeThreshold+=20000;
         console.log("Threshold " + closeThreshold);
     }
 }
