@@ -1,7 +1,8 @@
 var pey, maya, jes, bark;
 
-var threshold = 20; //255 is white, 0 is black
-var aveX, aveY; //this is what we are trying to find
+var aveX, aveY; 
+
+var threshold = 20; 
 
 var objectR = 255;
 var objectG = 0;
@@ -18,8 +19,26 @@ function preload(){
 
 function setup(){
     createCanvas(windowWidth, windowHeight);
-    video = createCapture(VIDEO);
-    video.size(320, 240);
+    video = createCapture(constraints, function (stream){
+        console.log(stream);
+    });
+    
+    var constraints = {
+        video: {
+            mandatory: {
+                minWidth: windowWidth,
+                minHeight: windowHeight
+            },
+            optional: [{maxFrameRate: 10}]
+        },
+        audio: true
+    };
+    createCapture (constraints, function(stream){
+        console.log(stream);
+    });
+    
+    var calibration = true;
+    
     maya = createSprite (width/2 - width/4, height/2, 100, 100);
     pey = createSprite(width/2, height/2.2, 100, 100);
     bark.loop();
@@ -38,7 +57,8 @@ function setup(){
 }
  
 function draw (){
-    video.loadPixels();
+    background(255);
+   // video.loadPixels();
     var totalFoundPixels = 0; //we are going to find the average location of change pixels so
     var sumX = 0; //we will need the sum of all the x find, the sum of all the y find and the total finds
     var sumY = 0;
@@ -58,7 +78,11 @@ function draw (){
             var b = video.pixels[offset + 2];
 
             //in a color "space" you find the distance between color the same whay you would in a cartesian space, phythag or dist in processing
-            var diff = dist(r, g, b, objectR, objectG, objectB);
+            var redDist = abs(r-objectR);
+            var greenDist = abs(g-objectG);
+            var blueDist = abs(b-objectB);
+            
+            var diff = redDist + greenDist + blueDist;
 
             if (diff < threshold) { //if it is close enough in size, add it to the average
                 sumX = sumX + col;
@@ -102,7 +126,7 @@ if(aveX < pey.position.x - 480) {
         else {
             pey.changeAnimation("forward");}
     
- if(mouseX < maya.position.x - 480 ) {
+if(mouseX < maya.position.x - 480 ) {
     maya.changeAnimation("left");
   }
   else if(aveX < maya.position.x - 160 && aveX > maya.position.x - 480) {
@@ -117,6 +141,11 @@ if(aveX < pey.position.x - 480) {
    else {
     maya.changeAnimation("forward");
   }
+
+if (calibration = true){
+     video.loadPixels()    
+    }
+    
     animation(jes, width/2 + width/4, height/2, 100,100);
     drawSprites();
 
@@ -126,12 +155,13 @@ function mousePressed(){
     var offset = map(mouseX, 0,width,width,0);
     //pull out the same pixel from the current frame 
     var thisColor = video.get(offset, mouseY);
+    var boolean = false;
 
     //pull out the individual colors for both pixels
     objectR = thisColor[0];
     objectG = thisColor[1];
     objectB = thisColor[2];
-    println("Chasing new color  " + objectR + " " + objectG + " " + objectB);
+   // println("Chasing new color  " + objectR + " " + objectG + " " + objectB);
     
     if (bark.isPlaying()){
         bark.stop();  
