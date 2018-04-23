@@ -3,7 +3,8 @@ var aveX = 0;
 var aveY = 0; 
 var video;
 var constraints;
-var threshold = 50; 
+var threshold = 50;
+var closeThreshold = 40000;
 var objectR = 255;
 var objectG = 0;
 var objectB = 0;
@@ -165,8 +166,17 @@ function mousePressed(){
     //pull out the individual colors for both pixels
     objectR = thisColor[0];
     objectG = thisColor[1];
-    objectB = thisColor[2];
-   // println("Chasing new color  " + objectR + " " + objectG + " " + objectB);
-    
-  
+    objectB = thisColor[2]; 
+}
+
+function keyTyped() {
+    //for adjusting things on the fly
+    if (key == '-') {
+        closeThreshold-=10000;
+        console.log("Threshold " + closeThreshold);
+    }
+    if (key == '+') {
+        closeThreshold+=10000;
+        console.log("Threshold " + closeThreshold);
+    }
 }
