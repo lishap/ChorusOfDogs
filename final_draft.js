@@ -125,7 +125,7 @@ if(aveX < maya.position.x - 480 ) {
     drawSprites();
     
     video.updatePixels();
-    if (calibration == true){
+    if (calibration){
     push();
     translate(video.width,0);
     scale(-1.0,1.0);
@@ -141,15 +141,26 @@ if(aveX < maya.position.x - 480 ) {
         aveY = sumY / totalFoundPixels;
          
         ellipse(aveX - 10, (aveY - 10), 20, 20);
+}
+   if(totalFoundPixels > 1000){
+      if (bark.isPlaying()){
+        bark.stop();  
+        jes.stop();
+    } else {
+        bark.play();
+        jes.play();
     }
+      } 
+    
  //console.log(width +",  "+ height);
 }
+
 
 function mousePressed(){
     var offset = map(mouseX, 0,width,width,0);
     //pull out the same pixel from the current frame 
     var thisColor = video.get(offset, mouseY);
-    var calibration = false;
+    calibration = false;
 
     //pull out the individual colors for both pixels
     objectR = thisColor[0];
@@ -157,11 +168,5 @@ function mousePressed(){
     objectB = thisColor[2];
    // println("Chasing new color  " + objectR + " " + objectG + " " + objectB);
     
-    if (bark.isPlaying()){
-        bark.stop();  
-        jes.stop();
-    } else {
-        bark.play();
-        jes.play();
-    }
+  
 }
