@@ -13,9 +13,9 @@ var calibration = true;
     
 
 function preload(){
-    maya = loadAnimation("dog_spr/maya1.png","dog_spr/maya2.png","dog_spr/maya3.png","dog_spr/maya4.png","dog_spr/maya5.png");  
-    jes = loadAnimation("dog_spr/jes1.png", "dog_spr/jes2.png", "dog_spr/jes3.png", "dog_spr/jes4.png", "dog_spr/jes5.png");
-    pey = loadAnimation("dog_spr/pey1.png","dog_spr/pey2.png","dog_spr/pey3.png","dog_spr/pey4.png","dog_spr/pey5.png");
+    maya = loadAnimation("dog_spr/maya1_resize.png","dog_spr/maya2_resize.png","dog_spr/maya3_resize.png","dog_spr/maya4_resize.png","dog_spr/maya5_resize.png");  
+    jes = loadAnimation("dog_spr/jes1_resize.png", "dog_spr/jes2_resize.png", "dog_spr/jes3_resize.png", "dog_spr/jes4_resize.png", "dog_spr/jes5_resize.png");
+    pey = loadAnimation("dog_spr/pey1_resize.png","dog_spr/pey2_resize.png","dog_spr/pey3_resize.png","dog_spr/pey4_resize.png","dog_spr/pey5_resize.png");
     soundFormats('m4a');
     bark = loadSound('dog_spr/bark.m4a');
 }
@@ -44,17 +44,17 @@ function setup(){
     pey = createSprite(width/2, height/2.2, 100, 100);
     bark.loop();
     
-    var myAnimation = pey.addAnimation("forward","dog_spr/pey3.png");
-    pey.addAnimation("left","dog_spr/pey1.png");
-    pey.addAnimation("mleft","dog_spr/pey2.png");
-    pey.addAnimation("mright","dog_spr/pey4.png");
-    pey.addAnimation("right","dog_spr/pey5.png"); 
+    var myAnimation = pey.addAnimation("forward","dog_spr/pey3_resize.png");
+    pey.addAnimation("left","dog_spr/pey1_resize.png");
+    pey.addAnimation("mleft","dog_spr/pey2_resize.png");
+    pey.addAnimation("mright","dog_spr/pey4_resize.png");
+    pey.addAnimation("right","dog_spr/pey5_resize.png"); 
     
-    var myAnimation2 = maya.addAnimation("forward","dog_spr/maya3.png");
-    maya.addAnimation("left","dog_spr/maya1.png");
-    maya.addAnimation("mleft","dog_spr/maya2.png");
-    maya.addAnimation("mright","dog_spr/maya4.png");
-    maya.addAnimation("right","dog_spr/maya5.png");  
+    var myAnimation2 = maya.addAnimation("forward","dog_spr/maya3_resize.png");
+    maya.addAnimation("left","dog_spr/maya._resize.png");
+    maya.addAnimation("mleft","dog_spr/maya2_resize.png");
+    maya.addAnimation("mright","dog_spr/maya4_resize.png");
+    maya.addAnimation("right","dog_spr/maya5_resize.png");  
 
     console.log("setup works ");
 }
